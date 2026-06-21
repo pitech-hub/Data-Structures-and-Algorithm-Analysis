@@ -8,7 +8,7 @@
  * 2. LYNATU KHOIRINNISA - 2902785980
  * 3. NAURA ZULWINDA PUTRI - 2902783602
  * 4. INDAH TRI PRAESTI - 2902795395
- * 
+ *
  * Deskripsi:
  * Program sistem manajemen playlist musik sederhana menggunakan
  * konsep OOP (Enkapsulasi, Inheritance, Polymorphism) dan array
@@ -194,6 +194,31 @@ class Member extends User {
     }
 
     /**
+     * Method khusus Member: melihat daftar semua lagu dalam playlist.
+     *
+     * Logika:
+     * - Iterasi array dari indeks 0 hingga jumlahLagu - 1.
+     * - Menampilkan nomor urut dan memanggil tampilkanInfo() setiap lagu.
+     * - Digunakan Member untuk menelusuri seluruh isi playlist.
+     *
+     * @param playlist   Array penyimpan lagu
+     * @param jumlahLagu Jumlah lagu yang tersimpan
+     */
+    public void lihatDaftarLagu(Lagu[] playlist, int jumlahLagu) {
+        if (jumlahLagu == 0) {
+            System.out.println("  [!] Playlist masih kosong.");
+            return;
+        }
+        System.out.println("  Daftar Lagu dalam Playlist:");
+        System.out.printf("  %-4s %-30s | %-20s | %s%n", "No.", "JUDUL", "ARTIS", "DURASI");
+        System.out.println("  " + "-".repeat(68));
+        for (int i = 0; i < jumlahLagu; i++) {
+            System.out.printf("  %-4d", i + 1);
+            playlist[i].tampilkanInfo();
+        }
+    }
+
+    /**
      * Method khusus Member: mencari lagu berdasarkan judul (case-insensitive).
      *
      * Logika:
@@ -220,6 +245,37 @@ class Member extends User {
         if (!ditemukan) {
             System.out.println("  [!] Lagu dengan judul \"" + keyword + "\" tidak ditemukan.");
         }
+    }
+
+    /**
+     * Method khusus Member: melihat detail satu lagu berdasarkan nomor urut.
+     *
+     * Logika:
+     * - Menerima nomor urut lagu (1-based, sesuai tampilan ke pengguna).
+     * - Mengonversi ke indeks array (0-based) dengan mengurangi 1.
+     * - Memeriksa apakah indeks valid sebelum mengakses array.
+     * - Menampilkan informasi lengkap lagu tersebut via tampilkanInfo().
+     *
+     * @param playlist   Array penyimpan lagu
+     * @param jumlahLagu Jumlah lagu yang tersimpan
+     * @param nomorUrut  Nomor urut lagu yang ingin dilihat (mulai dari 1)
+     */
+    public void lihatDetailLagu(Lagu[] playlist, int jumlahLagu, int nomorUrut) {
+        int indeks = nomorUrut - 1; // konversi ke 0-based index
+        if (jumlahLagu == 0) {
+            System.out.println("  [!] Playlist masih kosong.");
+            return;
+        }
+        if (indeks < 0 || indeks >= jumlahLagu) {
+            System.out.println("  [!] Nomor urut tidak valid. Masukkan angka 1 hingga " + jumlahLagu + ".");
+            return;
+        }
+        System.out.println("  Detail Lagu #" + nomorUrut + ":");
+        System.out.println("  " + "-".repeat(40));
+        System.out.println("  Judul  : " + playlist[indeks].getJudul());
+        System.out.println("  Artis  : " + playlist[indeks].getArtis());
+        System.out.printf("  Durasi : %.2f menit%n", playlist[indeks].getDurasi());
+        System.out.println("  " + "-".repeat(40));
     }
 
     /**
@@ -305,6 +361,24 @@ public class PlaylistOOP {
         System.out.println("\n>> ADMIN - Daftar Semua Lagu");
         System.out.println("-".repeat(70));
         admin.lihatSemuaLagu(playlist, jumlahLagu);
+
+        // --------------------------------------------------------
+        // MEMBER: Melihat daftar semua lagu
+        // --------------------------------------------------------
+        System.out.println("\n>> MEMBER - Melihat Daftar Semua Lagu");
+        System.out.println("-".repeat(70));
+        member.lihatDaftarLagu(playlist, jumlahLagu);
+
+        // --------------------------------------------------------
+        // MEMBER: Melihat detail lagu tertentu berdasarkan nomor urut
+        // --------------------------------------------------------
+        System.out.println("\n>> MEMBER - Melihat Detail Lagu #3");
+        System.out.println("-".repeat(70));
+        member.lihatDetailLagu(playlist, jumlahLagu, 3);
+
+        System.out.println("\n>> MEMBER - Melihat Detail Lagu #99 (nomor tidak valid)");
+        System.out.println("-".repeat(70));
+        member.lihatDetailLagu(playlist, jumlahLagu, 99);
 
         // --------------------------------------------------------
         // MEMBER: Mencari lagu berdasarkan judul
